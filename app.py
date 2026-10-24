@@ -657,5 +657,5 @@ with page2:
     )
 
 st.divider()
-st.caption("Built by Amirah · Python, pandas, scikit-learn, Plotly, Streamlit · "
+st.caption("Built by aamrhh · Python, pandas, scikit-learn, Plotly, Streamlit · "
            "[github.com/aamrhh/ringgit-oil-analysis](https://github.com/aamrhh/ringgit-oil-analysis)")
