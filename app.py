@@ -229,12 +229,13 @@ def style(fig, height=420):
     return fig
 
 
-def mark_date(fig, date, text, colour=MUTED):
-    """Dotted vertical line with a short label on top."""
+def mark_date(fig, date, text, colour=MUTED, y=1.0):
+    """Dotted vertical line with a short label (y = label height, so labels don't overlap)."""
     fig.add_shape(type="line", x0=date, x1=date, y0=0, y1=1, yref="paper",
                   line=dict(color=colour, width=1, dash="dot"))
-    fig.add_annotation(x=date, y=1, yref="paper", yanchor="bottom", text=text,
-                       showarrow=False, font=dict(size=11, color=colour))
+    fig.add_annotation(x=date, y=y, yref="paper", yanchor="top", text=text, xanchor="left",
+                       showarrow=False, font=dict(size=10, color=colour),
+                       bgcolor="rgba(255,255,255,0.85)")
 
 
 def rm(value):
@@ -423,11 +424,11 @@ with page1:
     fig.add_trace(go.Scatter(x=df.index, y=df["Brent_USD"], name="Oil (USD per barrel)",
                              line=dict(color=OIL, width=1.5),
                              hovertemplate="USD %{y:.0f}"), secondary_y=True)
-    mark_date(fig, "2008-09-01", "2008: oil crash")
-    mark_date(fig, "2014-12-01", "2014–15: oil crash")
-    mark_date(fig, "2020-04-01", "2020: COVID")
-    mark_date(fig, "2022-06-01", "2022: strong US dollar", WARN)
-    style(fig, 460)
+    mark_date(fig, "2008-09-01", "2008 crash", y=0.99)
+    mark_date(fig, "2014-12-01", "2014 crash", y=0.99)
+    mark_date(fig, "2020-04-01", "COVID", y=0.88)
+    mark_date(fig, "2022-06-01", "Strong USD", WARN, y=0.99)
+    style(fig, 400)
     fig.update_xaxes(
         range=["2014-01-01", df.index.max()],
         rangeselector=dict(
@@ -436,12 +437,12 @@ with page1:
                 dict(count=12, label="12 years", step="year", stepmode="backward"),
                 dict(step="all", label="Since 2005"),
             ],
-            bgcolor="#F1F5F9", activecolor="#CBD5E1", x=0, y=1.12,
+            bgcolor="#F1F5F9", activecolor="#CBD5E1", x=0, y=1.1, font=dict(size=11),
         ),
     )
-    fig.update_layout(margin=dict(l=10, r=10, t=80, b=10))
-    fig.update_yaxes(title_text="Ringgit per 1 US dollar", secondary_y=False)
-    fig.update_yaxes(title_text="Oil (USD per barrel)", showgrid=False, secondary_y=True)
+    fig.update_layout(margin=dict(l=5, r=5, t=50, b=5))
+    fig.update_yaxes(tickprefix="RM", secondary_y=False)
+    fig.update_yaxes(tickprefix="$", showgrid=False, secondary_y=True)
     with st.container(border=True):
         st.plotly_chart(fig, width="stretch")
 
@@ -630,9 +631,10 @@ with page2:
                               line=dict(color=OIL, width=1.2), hovertemplate="RM%{y:.2f}"))
     fig2.add_trace(go.Scatter(x=g.index, y=g["Oil + US dollar"], name="Guess: oil + US dollar",
                               line=dict(color=DOLLAR, width=1.2), hovertemplate="RM%{y:.2f}"))
-    mark_date(fig2, TEST_START, "Test starts (2022)", WARN)
-    style(fig2, 380)
-    fig2.update_yaxes(title_text="Price of 1 US dollar (RM)")
+    mark_date(fig2, TEST_START, "Test starts (2022)", WARN, y=0.99)
+    style(fig2, 360)
+    fig2.update_layout(margin=dict(l=5, r=5, t=20, b=5))
+    fig2.update_yaxes(tickprefix="RM")
     with b_.container(border=True):
         st.plotly_chart(fig2, width="stretch")
 
